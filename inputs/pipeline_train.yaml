@@ -1,0 +1,34 @@
+# Arquivo: pipeline_train.yaml
+$schema: https://azuremlschemas.azureedge.net/latest/pipelineJob.schema.json
+type: pipeline
+display_name: Pipeline de Treinamento de Vendas Gelato Mágico
+description: Carrega dados, treina modelo e registra.
+
+# Definição das entradas do Pipeline
+inputs:
+  pipeline_training_data:
+    type: uri_file
+    path: azureml:gelato_data:1 # Referência a um ativo de dados registrado
+  pipeline_learning_rate:
+    type: number
+    default: 0.01
+
+# Definição das etapas (jobs) do pipeline
+jobs:
+  # 1. Etapa de Treinamento
+  treinar_modelo:
+    type: command
+    component: azureml:train_gelato_model:1 # Referência ao componente registrado
+    
+    # Mapeia as entradas do pipeline para as entradas do componente
+    inputs:
+      training_data: ${{parent.inputs.pipeline_training_data}}
+      learning_rate: ${{parent.inputs.pipeline_learning_rate}}
+      
+    # Configura o recurso de computação
+    compute: azureml:cpu-cluster # Um cluster de computação para execução escalável
+    
+    # Saídas (o modelo registrado pelo MLflow)
+    outputs:
+      model_output:
+        type: mlflow_model
