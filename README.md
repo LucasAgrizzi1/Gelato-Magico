@@ -1,4 +1,5 @@
 # Gelato-Magico
 
-Desenvolvimento de codigo em novas linguagens
-aperfeiçoamento de habilidades em machine learning
+Desenvolvimento de codigo em novas linguagens.
+
+Aperfeiçoamento de habilidades em machine learning
