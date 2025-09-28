@@ -1,0 +1,28 @@
+# Arquivo: train_component.yaml
+$schema: https://azuremlschemas.azureedge.net/latest/commandComponent.schema.json
+name: train_gelato_model
+display_name: Treinar Modelo de Vendas de Sorvete
+version: 1
+type: command
+description: Treina um modelo de Regressão Linear para previsão de vendas.
+
+# Interface do Componente
+inputs:
+  training_data:
+    type: uri_file
+    description: Caminho para o arquivo CSV de treinamento.
+  learning_rate:
+    type: number
+    default: 0.01
+
+# Ambiente de Execução (Deve incluir scikit-learn e mlflow)
+environment:
+  image: mcr.microsoft.com/azureml/openmpi4.1.0-ubuntu20.04:latest # Imagem base
+  conda_file: ./conda.yaml # Arquivo com as dependências (scikit-learn, pandas, mlflow)
+
+# O Comando de Execução
+code: ./src # Diretório onde está o train.py
+command: >
+  python train.py 
+  --training_data ${{inputs.training_data}}
+  --learning_rate ${{inputs.learning_rate}}
